@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="LocalizationFileHelper.UserControls.FileBrowserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LocalizationFileHelper.UserControls"
+             mc:Ignorable="d"
+             xmlns:localization="clr-namespace:LocalizationFileHelper.Localization"
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="self">
+    <StackPanel Orientation="Horizontal">
+        <TextBox Name="FilePathTextBox" Text="{Binding FilePath, ElementName=self}" Width="400" BorderBrush="Gray"/>
+        <Button Content="{x:Static localization:LocalizationResource.Browse}" Click="Browse_Click" Margin="5 0 0 0"/>
+    </StackPanel>
+</UserControl>

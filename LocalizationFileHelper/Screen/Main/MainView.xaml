@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="LocalizationFileHelper.Screen.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:uc="clr-namespace:LocalizationFileHelper.UserControls"
+             mc:Ignorable="d"
+             xmlns:localization="clr-namespace:LocalizationFileHelper.Localization"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <TabControl ItemsSource="{Binding Tabs}" SelectedIndex="0">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock Text="{Binding TabHeader}"/>
+                    </TextBlock>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <GroupBox Header="{x:Static localization:LocalizationResource.Configuration}" 
+                                      Padding="10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="{x:Static localization:LocalizationResource.OriginalFile}" 
+                                               Grid.Row="0"
+                                               Grid.Column="0"
+                                               Margin="0 5"/>
+                                    <uc:FileBrowserControl Margin="5 5"
+                                                           BrowsingType="File"
+                                                           FilePath="{Binding OriginalFilePath, Mode=TwoWay}"
+                                                           Grid.Row="0"
+                                                           Grid.Column="1"/>
+
+                                    <TextBlock Text="{x:Static localization:LocalizationResource.LocalizationDirectory}"
+                                               Grid.Row="1"
+                                               Grid.Column="0"
+                                               Margin="0 5"/>
+                                    <uc:FileBrowserControl Margin="5 5"
+                                                           BrowsingType="Directory"
+                                                           FilePath="{Binding LocalizationDirectory, Mode=TwoWay}"
+                                                           Grid.Row="1"
+                                                           Grid.Column="1"/>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+    
+</UserControl>
