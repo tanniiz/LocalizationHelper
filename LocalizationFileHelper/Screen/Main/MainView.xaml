@@ -6,59 +6,71 @@
              xmlns:uc="clr-namespace:LocalizationFileHelper.UserControls"
              mc:Ignorable="d"
              xmlns:localization="clr-namespace:LocalizationFileHelper.Localization"
+             xmlns:cal="http://www.caliburnproject.org"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TabControl ItemsSource="{Binding Tabs}" SelectedIndex="0">
+        <TabControl ItemsSource="{Binding Tabs}" SelectedIndex="{Binding SelectedTabIndex}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock>
+                    <Button Background="Transparent" 
+                            BorderThickness="0" 
+                            cal:Message.Attach="[Event Click] = [Action OnTabItemClicked($dataContext)];"
+                            Margin="-5 -3 -5 -3"
+                            Padding="5"
+                            >
                         <TextBlock Text="{Binding TabHeader}"/>
-                    </TextBlock>
+                    </Button>
                 </DataTemplate>
             </TabControl.ItemTemplate>
-            
+
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                    <Grid Visibility="{Binding IsContentDisplayed}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                            <GroupBox Header="{x:Static localization:LocalizationResource.Configuration}" 
-                                      Padding="10">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                    </Grid.RowDefinitions>
+                        <GroupBox Header="{x:Static localization:LocalizationResource.Configuration}" 
+                                  Padding="10"
+                                  Grid.Row="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
 
-                                    <TextBlock Text="{x:Static localization:LocalizationResource.OriginalFile}" 
+                                <TextBlock Text="{x:Static localization:LocalizationResource.OriginalFile}" 
                                                Grid.Row="0"
                                                Grid.Column="0"
                                                Margin="0 5"/>
-                                    <uc:FileBrowserControl Margin="5 5"
+                                <uc:FileBrowserControl Margin="5 5"
                                                            BrowsingType="File"
                                                            FilePath="{Binding OriginalFilePath, Mode=TwoWay}"
                                                            Grid.Row="0"
                                                            Grid.Column="1"/>
 
-                                    <TextBlock Text="{x:Static localization:LocalizationResource.LocalizationDirectory}"
+                                <TextBlock Text="{x:Static localization:LocalizationResource.LocalizationDirectory}"
                                                Grid.Row="1"
                                                Grid.Column="0"
                                                Margin="0 5"/>
-                                    <uc:FileBrowserControl Margin="5 5"
+                                <uc:FileBrowserControl Margin="5 5"
                                                            BrowsingType="Directory"
                                                            FilePath="{Binding LocalizationDirectory, Mode=TwoWay}"
                                                            Grid.Row="1"
                                                            Grid.Column="1"/>
-                                </Grid>
-                            </GroupBox>
-                        </Grid>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="{x:Static localization:LocalizationResource.Actions}" 
+                                  Padding="10"
+                                  Grid.Row="1">
+                        </GroupBox>
+                    </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

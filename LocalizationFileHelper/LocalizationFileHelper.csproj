@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Framework\InputBindingTrigger.cs" />
     <Compile Include="Framework\ScreenBase.cs" />
     <Compile Include="Screen\Main\MainViewModel.cs" />
     <Compile Include="UserControls\FileBrowserControl\FileBrowserControl.xaml.cs">
