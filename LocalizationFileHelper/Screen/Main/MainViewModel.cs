@@ -1,5 +1,8 @@
-﻿using LocalizationFileHelper.Framework;
+﻿using Caliburn.Micro;
+using LocalizationFileHelper.Framework;
 using LocalizationFileHelper.Localization;
+using LocalizationFileHelper.Logic.Info.JsonInfo;
+using LocalizationFileHelper.Logic.Interfaces.IJsonService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,8 +47,6 @@ namespace LocalizationFileHelper.Screen
         protected override void OnFirstLoad()
         {
             Tabs = new ObservableCollection<TabModel>();
-            Tabs.Add(new TabModel { TabHeader = "Test", IsContentDisplayed = Visibility.Visible, OnTabClicked = OnSelectedTabChanged });
-            Tabs.Add(new TabModel { TabHeader = "Test2", IsContentDisplayed = Visibility.Visible, OnTabClicked = OnSelectedTabChanged });
             Tabs.Add(new TabModel { TabHeader = "+", IsContentDisplayed = Visibility.Collapsed, OnTabClicked = AddNewTab });
             SelectedTabIndex = 0;
 
@@ -55,15 +56,12 @@ namespace LocalizationFileHelper.Screen
         public void OnSelectedTabChanged(object dataContext) 
         {
             var tabItemModel = dataContext as TabModel;
-            if (Tabs != null)
-            {
-                var tabItem = Tabs.Where(x => x.TabItemId == tabItemModel.TabItemId).FirstOrDefault();
+            var tabItem = FindTabItemById(tabItemModel.TabItemId);
 
-                if (tabItem != null) 
-                {
-                    var itemIndex = Tabs.IndexOf(tabItem);
-                    SelectedTabIndex = itemIndex; 
-                }
+            if (tabItem != null)
+            {
+                var itemIndex = Tabs.IndexOf(tabItem);
+                SelectedTabIndex = itemIndex;
             }
         }
 
@@ -72,8 +70,35 @@ namespace LocalizationFileHelper.Screen
             if (Tabs != null)
             {
                 var idx = Tabs.Count - 1;
-                Tabs.Insert(idx, new TabModel { TabHeader = LocalizationResource.NewTab, IsContentDisplayed = Visibility.Visible, OnTabClicked = OnSelectedTabChanged });
+                Tabs.Insert(idx, new TabModel
+                {
+                    TabHeader = LocalizationResource.NewTab,
+                    IsContentDisplayed = Visibility.Visible,
+                    OnTabClicked = OnSelectedTabChanged
+                });
+
                 SelectedTabIndex = idx;
+            }
+        }
+
+        public void RearrageJson()
+        {
+            var selectedTab = Tabs[SelectedTabIndex];
+            var jsonService = IoC.Get<IJsonService>();
+
+            var files = Directory.GetFiles(selectedTab.LocalizationDirectory).Where(x => Path.GetExtension(x).Equals(".json")).ToList();
+            jsonService.Rearrange(new JsonInfo { OriginalFilePath = selectedTab.OriginalFilePath, LocalizationFilePaths = files });
+        }
+
+        private TabModel FindTabItemById(Guid id)
+        {
+            if (Tabs != null)
+            {
+                return Tabs.Where(x => x.TabItemId == id).FirstOrDefault();
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -126,6 +151,8 @@ namespace LocalizationFileHelper.Screen
                         {
                             var dir = System.IO.Path.GetDirectoryName(value);
                             LocalizationDirectory = dir;
+
+                            UpdateTabHeader();
                         }
 
                         NotifyOfPropertyChange(() => OriginalFilePath);
@@ -177,6 +204,32 @@ namespace LocalizationFileHelper.Screen
             public void OnTabItemClicked(object dataContext)
             {
                 OnTabClicked(dataContext);
+            }
+
+            private void UpdateTabHeader()
+            {
+                if (!string.IsNullOrEmpty(OriginalFilePath)) 
+                {
+                    var rootDir = FindProjectRootDirectory(Path.GetDirectoryName(OriginalFilePath));
+
+                    var dir = new DirectoryInfo(rootDir);
+                    TabHeader = dir.Name;
+                }
+            }
+
+            private string FindProjectRootDirectory(string dir)
+            {
+                var dInfo = new DirectoryInfo(dir);
+                var isRootDir = dInfo.GetDirectories().Any(x => x.Name.Equals(".git"));
+
+                if (isRootDir)
+                {
+                    return dir;
+                }
+                else
+                {
+                    return FindProjectRootDirectory(Directory.GetParent(dir).FullName);
+                }
             }
         }
     }

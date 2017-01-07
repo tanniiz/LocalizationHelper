@@ -9,6 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using Caliburn.Micro;
 using LocalizationFileHelper.ApplicationShell;
 using LocalizationFileHelper.Localization;
 using LocalizationFileHelper.Screen;

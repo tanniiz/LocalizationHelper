@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using LocalizationFileHelper.ApplicationShell;
+using LocalizationFileHelper.Logic.Interfaces.IJsonService;
+using LocalizationFileHelper.Logic.Services.JsonService;
 using LocalizationFileHelper.Screen;
 using System;
 using System.Collections.Generic;
@@ -39,6 +41,7 @@ namespace LocalizationFileHelper
             _container = new SimpleContainer();
             _container.Singleton<IWindowManager, WindowManager>();
             _container.Singleton<IEventAggregator, EventAggregator>();
+            _container.Singleton<IJsonService, JsonService>();
             _container.Singleton<ApplicationShellViewModel>();
             _container.Singleton<MainViewModel>();
         }

@@ -69,6 +69,8 @@
                         <GroupBox Header="{x:Static localization:LocalizationResource.Actions}" 
                                   Padding="10"
                                   Grid.Row="1">
+                            <Button cal:Message.Attach="[Event Click] = [Action RearrageJson()];"
+                                    Content="Rearrange"/>
                         </GroupBox>
                     </Grid>
                 </DataTemplate>
