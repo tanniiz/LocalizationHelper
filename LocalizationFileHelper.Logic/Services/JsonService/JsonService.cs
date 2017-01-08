@@ -1,4 +1,5 @@
 ﻿using LocalizationFileHelper.Logic.Info.JsonInfo;
+using LocalizationFileHelper.Logic.Info.LocalizationFileInfo;
 using LocalizationFileHelper.Logic.Interfaces.IJsonService;
 using LocalizationFileHelper.Logic.Utils;
 using Newtonsoft.Json;
@@ -22,11 +23,6 @@ namespace LocalizationFileHelper.Logic.Services.JsonService
             return jsonContent.ToObject<Dictionary<string, string>>();
         }
 
-        public void GetAllKeys(JsonInfo jsonInfo)
-        {
-            
-        }
-
         public void Rearrange(JsonInfo jsonInfo)
         {
             foreach(var filePath in jsonInfo.LocalizationFilePaths)
@@ -36,6 +32,35 @@ namespace LocalizationFileHelper.Logic.Services.JsonService
                 var contentToFile = JsonConvert.SerializeObject(json, Formatting.Indented);
                 FileUtils.WriteToFile(filePath, contentToFile);
             }
+        }
+
+        public List<LocalizationFileInfo> GetFileInfoes(JsonInfo jsonInfo)
+        {
+            List<LocalizationFileInfo> infoes = new List<LocalizationFileInfo>();
+            foreach (var json in jsonInfo.LocalizationFilePaths)
+            {
+                var keyValues = ParseJsonToDictionary(json);
+                var missingKey = FindMissingKey(jsonInfo.OriginalFilePath, json);
+                infoes.Add(new LocalizationFileInfo
+                {
+                    IsOriginal = json == jsonInfo.OriginalFilePath,
+                    KeyValues = keyValues,
+                    TotalKeyValue = keyValues.Count,
+                    MissingKey = missingKey,
+                    TotalMissingKeys = missingKey.Count,
+                    FilePath = json
+                });
+            }
+
+            return infoes;
+        }
+
+        private List<string> FindMissingKey(string originalPathFile, string filePathToCompare)
+        {
+            var original = ParseJsonToDictionary(originalPathFile);
+            var toBeCompared = ParseJsonToDictionary(filePathToCompare);
+
+            return original.Where(x => !toBeCompared.ContainsKey(x.Key)).Select(x => x.Key).ToList();
         }
     }
 }

@@ -8,8 +8,13 @@
              xmlns:localization="clr-namespace:LocalizationFileHelper.Localization"
              d:DesignHeight="300" d:DesignWidth="300"
              x:Name="self">
-    <StackPanel Orientation="Horizontal">
-        <TextBox Name="FilePathTextBox" Text="{Binding FilePath, ElementName=self}" Width="400" BorderBrush="Gray"/>
-        <Button Content="{x:Static localization:LocalizationResource.Browse}" Click="Browse_Click" Margin="5 0 0 0"/>
-    </StackPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBox Name="FilePathTextBox" Text="{Binding FilePath, ElementName=self}" BorderBrush="Gray" Grid.Column="0"/>
+        <Button Content="{x:Static localization:LocalizationResource.Browse}" Click="Browse_Click" Margin="5 0 0 0" Grid.Column="1"/>
+    </Grid>
 </UserControl>

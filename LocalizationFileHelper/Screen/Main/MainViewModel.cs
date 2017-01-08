@@ -16,8 +16,8 @@ namespace LocalizationFileHelper.Screen
 {
     public class MainViewModel : ScreenBase
     {
-        private ObservableCollection<TabModel> _tabs;
-        public ObservableCollection<TabModel> Tabs
+        private ObservableCollection<TabItemInfo> _tabs;
+        public ObservableCollection<TabItemInfo> Tabs
         {
             get { return _tabs; }
             set
@@ -46,8 +46,8 @@ namespace LocalizationFileHelper.Screen
 
         protected override void OnFirstLoad()
         {
-            Tabs = new ObservableCollection<TabModel>();
-            Tabs.Add(new TabModel { TabHeader = "+", IsContentDisplayed = Visibility.Collapsed, OnTabClicked = AddNewTab });
+            Tabs = new ObservableCollection<TabItemInfo>();
+            Tabs.Add(new TabItemInfo { TabHeader = "+", IsContentDisplayed = Visibility.Collapsed, OnTabClicked = AddNewTab });
             SelectedTabIndex = 0;
 
             base.OnFirstLoad();
@@ -55,7 +55,7 @@ namespace LocalizationFileHelper.Screen
 
         public void OnSelectedTabChanged(object dataContext) 
         {
-            var tabItemModel = dataContext as TabModel;
+            var tabItemModel = dataContext as TabItemInfo;
             var tabItem = FindTabItemById(tabItemModel.TabItemId);
 
             if (tabItem != null)
@@ -70,7 +70,7 @@ namespace LocalizationFileHelper.Screen
             if (Tabs != null)
             {
                 var idx = Tabs.Count - 1;
-                Tabs.Insert(idx, new TabModel
+                Tabs.Insert(idx, new TabItemInfo
                 {
                     TabHeader = LocalizationResource.NewTab,
                     IsContentDisplayed = Visibility.Visible,
@@ -90,7 +90,20 @@ namespace LocalizationFileHelper.Screen
             jsonService.Rearrange(new JsonInfo { OriginalFilePath = selectedTab.OriginalFilePath, LocalizationFilePaths = files });
         }
 
-        private TabModel FindTabItemById(Guid id)
+        public void Proceed()
+        {
+            var selectedTab = Tabs[SelectedTabIndex];
+
+            if (selectedTab != null)
+            {
+                var jsonService = IoC.Get<IJsonService>();
+
+                var files = Directory.GetFiles(selectedTab.LocalizationDirectory).Where(x => Path.GetExtension(x).Equals(".json")).ToList();
+                jsonService.GetFileInfoes(new JsonInfo { OriginalFilePath = selectedTab.OriginalFilePath, LocalizationFilePaths = files });
+            }
+        }
+
+        private TabItemInfo FindTabItemById(Guid id)
         {
             if (Tabs != null)
             {
@@ -102,9 +115,9 @@ namespace LocalizationFileHelper.Screen
             }
         }
 
-        public class TabModel : Caliburn.Micro.PropertyChangedBase
+        public class TabItemInfo : PropertyChangedBase
         {
-            public TabModel()
+            public TabItemInfo()
             {
                 TabItemId = Guid.NewGuid();
             }
@@ -229,6 +242,79 @@ namespace LocalizationFileHelper.Screen
                 else
                 {
                     return FindProjectRootDirectory(Directory.GetParent(dir).FullName);
+                }
+            }
+        }
+
+        public class LocalizationFileInfo : PropertyChangedBase
+        {
+            private bool _isOriginal;
+            public bool IsOriginal
+            {
+                get { return _isOriginal; }
+                set
+                {
+                    if (_isOriginal != value)
+                    {
+                        _isOriginal = value;
+                        NotifyOfPropertyChange(() => IsOriginal);
+                    }
+                }
+            }
+
+            private int _totalKeyValue;
+            public int TotalKeyValue
+            {
+                get { return TotalKeyValue; }
+                set
+                {
+                    if (_totalKeyValue != value)
+                    {
+                        _totalKeyValue = value;
+                        NotifyOfPropertyChange(() => TotalKeyValue);
+                    }
+                }
+            }
+
+            private int _totalMissingKeyValue;
+            public int TotalMissingKeyValue
+            {
+                get { return _totalMissingKeyValue; }
+                set
+                {
+                    if (_totalMissingKeyValue != value)
+                    {
+                        _totalMissingKeyValue = value;
+                        NotifyOfPropertyChange(() => TotalMissingKeyValue);
+                    }
+                }
+            }
+
+            private string _filePath;
+            public string FilePath
+            {
+                get { return _filePath; }
+                set
+                {
+                    if (_filePath != value)
+                    {
+                        _filePath = value;
+                        NotifyOfPropertyChange(() => FilePath);
+                    }
+                }
+            }
+
+            private Dictionary<string, string> _keyValues;
+            public Dictionary<string, string> KeyValues
+            {
+                get { return _keyValues; }
+                set
+                {
+                    if (_keyValues != value)
+                    {
+                        _keyValues = value;
+                        NotifyOfPropertyChange(() => KeyValues);
+                    }
                 }
             }
         }

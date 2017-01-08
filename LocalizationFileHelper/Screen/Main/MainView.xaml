@@ -42,6 +42,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
 
                                 <TextBlock Text="{x:Static localization:LocalizationResource.OriginalFile}" 
@@ -63,14 +64,48 @@
                                                            FilePath="{Binding LocalizationDirectory, Mode=TwoWay}"
                                                            Grid.Row="1"
                                                            Grid.Column="1"/>
+
+                                <Button cal:Message.Attach="[Event Click] = [Action Proceed()];"
+                                        Grid.Row="2"
+                                        Grid.ColumnSpan="2"
+                                        HorizontalAlignment="Right"
+                                        Content="{x:Static localization:LocalizationResource.Proceed}"
+                                        Width="75"
+                                        Margin="5 5 0 5"/>
                             </Grid>
                         </GroupBox>
 
                         <GroupBox Header="{x:Static localization:LocalizationResource.Actions}" 
                                   Padding="10"
                                   Grid.Row="1">
-                            <Button cal:Message.Attach="[Event Click] = [Action RearrageJson()];"
-                                    Content="Rearrange"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TabControl>
+                                    <TabItem Header="Detail"/>
+                                </TabControl>
+
+                                <StackPanel Grid.Row="1"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Right">
+                                    <Button Content="Add"
+                                            Width="75"
+                                            Margin="5 5 0 5"/>
+                                    <Button Content="Remove"
+                                            Width="75"
+                                            Margin="5 5 0 5"/>
+                                    <Button cal:Message.Attach="[Event Click] = [Action RearrageJson()];"
+                                            Content="Rearrange"
+                                            Width="75"
+                                            Margin="5 5 0 5"/>
+                                </StackPanel>
+                            </Grid>
                         </GroupBox>
                     </Grid>
                 </DataTemplate>

@@ -122,5 +122,14 @@ namespace LocalizationFileHelper.Localization {
                 return ResourceManager.GetString("OriginalFile", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proceed.
+        /// </summary>
+        public static string Proceed {
+            get {
+                return ResourceManager.GetString("Proceed", resourceCulture);
+            }
+        }
     }
 }

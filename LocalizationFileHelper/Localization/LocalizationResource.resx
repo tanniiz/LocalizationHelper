@@ -138,4 +138,7 @@
   <data name="OriginalFile" xml:space="preserve">
     <value>Original File</value>
   </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>Proceed</value>
+  </data>
 </root>
